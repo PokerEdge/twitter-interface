@@ -1,12 +1,17 @@
 "use strict";
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 // var Twit = require('twit');
+
+// const cheerio = require('cheerio');
+// const $ = cheerio.load(`<textarea class="circle--textarea--input" placeholder="What's happening?" id="tweet-textarea"></textarea>`);
+
+// console.log($);
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -14,6 +19,8 @@ var users = require('./routes/users');
 var config = require('./config');
 
 var app = express();
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,6 +36,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+
+//Load statis assets from public app.use(express.static('public'))
+app.use('/static', (req, res) => {
+
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -47,5 +59,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.listen(3000, () => console.log('Frontend server is running on port 3000'));
 
 module.exports = app;

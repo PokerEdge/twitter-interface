@@ -1,9 +1,9 @@
-var express = require('express');
-var Twit = require('twit');
-var config = require('../config');
-var router = express.Router();
+const express = require('express');
+const Twit = require('twit');
+const config = require('../config');
+const router = express.Router();
 
-var T = Twit(config);
+const T = Twit(config);
 let friendIds = [];
 let dateData = [];
 
@@ -20,12 +20,6 @@ const id = {user_id: '1602771427'};
   // https://dev.twitter.com/overview/api/tweets
 
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  // console.log(config.consumer_key);
-  res.render('index', { title: 'Twitter Interface'});
-});
-
 
 //START COMMENT BLOCK FOR FRIENDS (USING IDS)
 
@@ -36,8 +30,10 @@ T.get('friends/ids', screenName, (err, data) => {
     // //if !err push
     // friendIds.push(`{user_id: ${data.ids[i]}}`);
 
+    console.log(data);
 
     //MIGHT ONLY NEED THE ID NUMBER NOT USER_ID: ID_NUMBER
+
     friendIds.push(`{user_id: ${data.ids[i]}}`);
 
     //List of 5 most recent follower's (friend's) IDs
@@ -57,13 +53,32 @@ T.get('friends/ids', screenName, (err, data) => {
 
 })
 
+// Get your 5 most recent tweets
+T.get('statuses/user_timeline', screenName, (err, data) => {
+
+  if(err){
+    console.log(err);
+  }
+
+  for(let k = 0; k < 5; k++){
+
+    console.log(`Tweet ${k+1}:`);
+    console.log(data[k].text);
+    // console.log(data[1]);
+
+  }
+})
+
+// Get your 5 most recent friends
+
+
+// Get your 5 most recent private messages
+
 
 T.get('users/lookup', screenName, (err, data) => {
 
-  console.log('************');
-
-  //Get Tweet text
-  console.log(data[0].status.text);
+  // //Get Tweet text (SHOULD BE DONE IN DIFFERENT GET REQ TO LOOP OVER 5 TWEETS)
+  // console.log(data[0].status.text);
 
   // -# of retweets:     "retweet_count": 23936,
   console.log(data[0].status.retweet_count);
@@ -73,8 +88,6 @@ T.get('users/lookup', screenName, (err, data) => {
 
   // -date Tweeted
   console.log(data[0].status.created_at);
-
-  console.log('************');
 
   //-profile image
   console.log(data[0].profile_image_url.replace('normal','bigger'));
@@ -100,12 +113,10 @@ T.get('users/lookup', screenName, (err, data) => {
 
 //Get 5 most recent direct message bodies, date the message was sent, and time the message was sent
 T.get('direct_messages/sent', {count: 5}, (err, data, res) => {
-  // console.log(data[0].text);
+
   dateData = [];
 
   for (let j = 0; j < 5; j++){
-
-    // console.log(data[0]);
 
     //Message body
     console.log(data[j].text);
@@ -119,11 +130,24 @@ T.get('direct_messages/sent', {count: 5}, (err, data, res) => {
     //Time the message was sent
     console.log(dateData.split(' ').slice(3).join(' '));
 
-    //Separation visual cue
-    console.log("------");
   }
+  // //Add array of data to templateData object
+  // templateData.data[j].text;
 })
 
 //END COMMENT BLOCK FOR MESSAGES
+
+/* GET home page. */
+router.get('/', function(req, res, next) {
+
+  //Populate object from segmented get requests using Twit package
+  templateData = { title: 'Twitter Interface', username: 'Shootaaa' };
+
+  res.render('index', templateData);
+});
+
+
+//ERROR HANDLING REDIRECTS
+//res.redirect(301, 'http://example.com');
 
 module.exports = router;

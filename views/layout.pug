@@ -1,7 +1,32 @@
 doctype html
-html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+html(lang='en')
+head
+  //
+    Basic Page Needs
+    ––––––––––––––––––––––––––––––––––––––––––––––––––
+  meta(charset='utf-8')
+  title Twitter Client
+  meta(name='description', content='')
+  meta(name='author', content='')
+  //
+    Mobile Specific Metas
+    ––––––––––––––––––––––––––––––––––––––––––––––––––
+  meta(name='viewport', content='width=device-width, initial-scale=1')
+  //
+    FONTS
+    ––––––––––––––––––––––––––––––––––––––––––––––––––
+  link(href='https://fonts.googleapis.com/css?family=Work+Sans:400,600', rel='stylesheet', type='text/css')
+  //
+    CSS
+    ––––––––––––––––––––––––––––––––––––––––––––––––––
+  link(rel='stylesheet', href='/stylesheets/global.css')
+  //
+      jQuery
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+  script(src='http://code.jquery.com/jquery-3.2.1.js', integrity='sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=', crossorigin='anonymous')
+  //
+      main.js
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+  script(src='/javascripts/main.js')
+body
+  block content
