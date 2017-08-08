@@ -81,9 +81,80 @@ T.get('followers/ids', screenName, (err,data) => {
 
 
 //CALL TWEETS FUNCTION HERE TO MAKE USE OF ID -- ISSUE HERE
-T.get('friends/list', screenName , (err,data) => {
+T.get('friends/list', screenName, (err,data) => {
 
-    console.log(`${data.users.id}++++++++++`);
+    //real name 1
+    console.log(data.users[0].name);
+    templateData.followerOneName = data.users[0].name;
+
+    //screen name 1
+    console.log(data.users[0].screen_name);
+    templateData.followerOneScreenName = data.users[0].screen_name;
+
+    //profile image 1
+    console.log(data.users[0].profile_image_url);
+    templateData.followerOneProfileURL = data.users[0].profile_image_url.replace('normal', 'bigger');
+
+    //real name 2
+    console.log(data.users[1].name);
+    templateData.followerTwoName = data.users[1].name;
+
+    //screen name 2
+    console.log(data.users[1].screen_name);
+    templateData.followerTwoScreenName = data.users[1].screen_name;
+
+    //profile image 2
+    console.log(data.users[1].profile_image_url);
+    templateData.followerTwoProfileURL = data.users[1].profile_image_url.replace('normal', 'bigger');
+
+
+    //real name 3
+    console.log(data.users[2].name);
+    templateData.followerThreeName = data.users[2].name;
+
+    //screen name 3
+    console.log(data.users[2].screen_name);
+    templateData.followerThreeScreenName = data.users[2].screen_name;
+
+    //profile image 3
+    console.log(data.users[2].profile_image_url);
+    templateData.followerThreeProfileURL = data.users[2].profile_image_url.replace('normal', 'bigger');
+
+
+    //real name 4
+    console.log(data.users[3].name);
+    templateData.followerFourName = data.users[3].name;
+
+    //screen name 4
+    console.log(data.users[3].screen_name);
+    templateData.followerFourScreenName = data.users[3].screen_name;
+
+    //profile image 4
+    console.log(data.users[3].profile_image_url);
+    templateData.followerFourProfileURL = data.users[3].profile_image_url.replace('normal', 'bigger');
+
+
+    //real name 5
+    console.log(data.users[4].name);
+    templateData.followerFiveName = data.users[4].name;
+
+    //screen name 5
+    console.log(data.users[4].screen_name);
+    templateData.followerFiveScreenName = data.users[4].screen_name;
+
+    //profile image 5
+    console.log(data.users[4].profile_image_url);
+    templateData.followerFiveProfileURL = data.users[4].profile_image_url.replace('normal', 'bigger');
+
+
+    // console.log(data.users[2].name);
+    // templateData.followerThreeName = data.users[2].name;
+    //
+    // console.log(data.users[3].name);
+    // templateData.followerFourName = data.users[3].name;
+    //
+    // console.log(data.users[4].name);
+    // templateData.followerFiveName = data.users[4].name;
 });
 
 // T.get('friends/list', screenName,(err,data) => {
@@ -125,8 +196,8 @@ T.get('users/lookup', screenName, (err, data) => {
   console.log(data[0].profile_image_url.replace('normal','bigger'));
   templateData.profileImageURL = data[0].profile_image_url.replace('normal','bigger');
 
-  console.log(data[0].profile_background_image_url + "*********");
-  templateData.profileBackgroundImageURL = data[0].profile_background_image_url;
+  console.log(data[0].profile_background_banner_url + "*********");
+  templateData.profileBackgroundImageURL = data[0].profile_banner_url;
 
   //-real name
   console.log(data[0].name);
