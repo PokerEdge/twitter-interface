@@ -6,10 +6,14 @@ const router = express.Router();
 const T = Twit(config);
 let friendIds = [];
 let dateData = [];
+let tweetsText = [];
 
 //User's Twitter handle for use as parameter in GET requests
 const screenName = {screen_name: 'shootaaa'};
 const id = {user_id: '1602771427'};
+
+//Populate object from segmented get requests using Twit package
+var templateData = { title: 'Twitter Interface', username: '@Shootaaa' };
 
   // q: 'rainbow',
   // screen_name: "shootaaa"
@@ -28,13 +32,9 @@ T.get('friends/ids', screenName, (err, data) => {
   friendIds = [];
   for(let i = 0; i < 5; i++){
     // //if !err push
-    // friendIds.push(`{user_id: ${data.ids[i]}}`);
-
-    console.log(data);
+    friendIds.push(`{user_id: ${data.ids[i]}}`);
 
     //MIGHT ONLY NEED THE ID NUMBER NOT USER_ID: ID_NUMBER
-
-    friendIds.push(`{user_id: ${data.ids[i]}}`);
 
     //List of 5 most recent follower's (friend's) IDs
 
@@ -47,11 +47,9 @@ T.get('friends/ids', screenName, (err, data) => {
   // // // Logs comma separated list of user_ids
   // console.log(friendIds.join(','));
   console.log(friendIds);
-  //CALL TWEETS FUNCTION HERE TO MAKE USE OF ID
+  templateData.friendIds = friendIds;
 
-  //NEED TO *MAP* ID TO USER NAME
-
-})
+});
 
 // Get your 5 most recent tweets
 T.get('statuses/user_timeline', screenName, (err, data) => {
@@ -64,12 +62,43 @@ T.get('statuses/user_timeline', screenName, (err, data) => {
 
     console.log(`Tweet ${k+1}:`);
     console.log(data[k].text);
-    // console.log(data[1]);
+    tweetsText.push(data[k].text);
 
   }
-})
+  templateData.tweetsText = tweetsText;
+});
 
-// Get your 5 most recent friends
+// Get your 5 most recent friends (followers)
+  //This method is especially powerful when used in conjunction with GET users / lookup, a method that allows you to convert user IDs into full user objects in bulk.
+T.get('followers/ids', screenName, (err,data) => {
+
+  //Friends count
+  console.log(data.ids.length);
+  templateData.followers = data.ids.length;
+
+
+});
+
+
+//CALL TWEETS FUNCTION HERE TO MAKE USE OF ID -- ISSUE HERE
+T.get('friends/list', screenName , (err,data) => {
+
+    console.log(`${data.users.id}++++++++++`);
+});
+
+// T.get('friends/list', screenName,(err,data) => {
+//   for(let i = 0; i < 4; i++)
+//   //friend profile image
+//
+//
+//   //friend real name
+//   console.log(.data.name + "+++++++++++");
+//
+//   //friend screenname
+//
+// });
+
+
 
 
 // Get your 5 most recent private messages
@@ -82,24 +111,38 @@ T.get('users/lookup', screenName, (err, data) => {
 
   // -# of retweets:     "retweet_count": 23936,
   console.log(data[0].status.retweet_count);
+  templateData.retweetCount = data[0].status.retweet_count;
 
   // -# of favorites (aka 'likes'):    "favorite_count": 21879,
   console.log(data[0].status.favorite_count);
+  templateData.favoriteCount = data[0].status.favorite_count;
 
   // -date Tweeted
   console.log(data[0].status.created_at);
+  templateData.createdAt = data[0].status.created_at;
 
   //-profile image
   console.log(data[0].profile_image_url.replace('normal','bigger'));
+  templateData.profileImageURL = data[0].profile_image_url.replace('normal','bigger');
+
+  console.log(data[0].profile_background_image_url + "*********");
+  templateData.profileBackgroundImageURL = data[0].profile_background_image_url;
 
   //-real name
   console.log(data[0].name);
+  templateData.name = data[0].name;
 
   //-screenname
   console.log(data[0].screen_name);
+  templateData.screenName = data[0].screen_name;
 
   //unnecessary?
   console.log(data[0].id_str);
+  templateData.idString = data[0].id_str;
+
+  //FriendsCount
+  console.log(data[0].friends_count);
+  templateData.friendsCount = data[0].friends_count;
 
   //Handle 404 err if no look up criteria match
   //Data comes in as incomingMessage and should have property of statusCode
@@ -119,29 +162,29 @@ T.get('direct_messages/sent', {count: 5}, (err, data, res) => {
   for (let j = 0; j < 5; j++){
 
     //Message body
-    console.log(data[j].text);
+    // console.log(data[j].text);
+    dateData.push(data[j].text);
 
     //Dates are always in "Mon Jun 26 23:54:35 +0000 2017" string format
-    dateData = data[j].created_at;
+    // console.log(data[j].created_at);
 
-    //Date message was sent
-    console.log(dateData.split(' ', 3).join(' '));
-
-    //Time the message was sent
-    console.log(dateData.split(' ').slice(3).join(' '));
-
+    // //Date message was sent
+    // // console.log(dateData.split(' ', 3).join(' '));
+    // dateData.push(dateData.split(' ', 3).join(' '));
+    //
+    // //Time the message was sent
+    // // console.log(dateData.split(' ').slice(3).join(' '));
+    // dateData.push(dateData.split(' ').slice(3).join(' '));
   }
   // //Add array of data to templateData object
-  // templateData.data[j].text;
+  templateData.messagesText = dateData;
+  // console.log(dateData[1]);
 })
 
 //END COMMENT BLOCK FOR MESSAGES
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-
-  //Populate object from segmented get requests using Twit package
-  templateData = { title: 'Twitter Interface', username: 'Shootaaa' };
 
   res.render('index', templateData);
 });
