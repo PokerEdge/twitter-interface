@@ -19,15 +19,15 @@ block content
               li
                 a Sign Out
   .app--tweet
-    form
+    form(action='/',method='post')
       .circle--fluid
         .circle--fluid--cell.circle--fluid--primary.align-bottom.app--tweet--post
           .app--avatar(style=`background-image: url(${profileImageURL})`)
             img(src='images/m-spore.png')
-          textarea#tweet-textarea.circle--textarea--input(placeholder="What's happening?")
+          textarea#tweet-textarea.circle--textarea--input(type="text", placeholder="What's happening?", name="tweetText")
           strong#tweet-char.app--tweet--char 140
         .circle--fluid--cell.align-bottom
-          button.button-primary Tweet
+          button.button-primary(type="submit") Tweet
   .bounds.app--body
     .app--section--header
       .grid-33
@@ -274,28 +274,28 @@ block content
               | Conversation with 
               a #{name}
             ul.app--message--conversation
-              li.app--message
-                .app--avatar(style='background-image: url(images/f-spore.png)')
+              li.app--message--me
+                .app--avatar(style=`background-image: url(${profileImageURL})`)
                   img(src='images/f-spore.png')
                 p.app--message--text #{messagesText[0]}
                 p.app--message--timestamp 3 hours ago
               li.app--message--me
-                .app--avatar(style='background-image: url(images/m-spore.png)')
+                .app--avatar(style=`background-image: url(${profileImageURL})`)
                   img(src='images/m-spore.png')
                 p.app--message--text #{messagesText[1]}
                 p.app--message--timestamp 2 hours ago
-              li.app--message
-                .app--avatar(style='background-image: url(images/f-spore.png)')
+              li.app--message--me
+                .app--avatar(style=`background-image: url(${profileImageURL})`)
                   img(src='images/f-spore.png')
                 p.app--message--text #{messagesText[2]}
                 p.app--message--timestamp 2 hours ago
               li.app--message--me
-                .app--avatar(style='background-image: url(images/m-spore.png)')
+                .app--avatar(style=`background-image: url(${profileImageURL})`)
                   img(src='images/m-spore.png')
                 p.app--message--text #{messagesText[3]}
                 p.app--message--timestamp 1 hour ago
-              li.app--message
-                .app--avatar(style='background-image: url(images/f-spore.png)')
+              li.app--message--me
+                .app--avatar(style=`background-image: url(${profileImageURL})`)
                   img(src='images/f-spore.png')
                 p.app--message--text #{messagesText[4]}
                 p.app--message--timestamp 1 hour ago
