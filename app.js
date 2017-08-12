@@ -6,10 +6,27 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const moment = require('moment');
+
+const app = express();
+
+const server = require('http').createServer(app);
+const io = require('socket.io').listen(server);
+
 // var Twit = require('twit');
 
 // const cheerio = require('cheerio');
 // const $ = cheerio.load(`<textarea class="circle--textarea--input" placeholder="What's happening?" id="tweet-textarea"></textarea>`);
+
+let connections = [];
+
+// var app = require('express')();
+// var server = require('http').createServer(app);
+// var io = require('socket.io')(server);
+// io.on('connection', function(){ /* … */ });
+// server.listen(3000);
+
+
 
 // console.log($);
 
@@ -18,7 +35,11 @@ var users = require('./routes/users');
 
 var config = require('./config');
 
-var app = express();
+
+
+
+//CHANGE REQUESTS FROM APP.X to SERVER.X ?
+
 
 
 
@@ -60,6 +81,20 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(3000, () => console.log('Frontend server is running on port 3000'));
+//Changed from app.listen(3000, ...) to support socket.io
+server.listen(process.env.PORT || 3000, () => console.log('Frontend server is running on port 3000'));
+
+io.sockets.on('connection', function(socket){
+  //All events emitted go in here (entire post request...?)
+
+  connections.push(socket);
+  console.log('Connected: %s sockets connected', connections.length);
+
+  socket.on('disconnect', function(){
+      connections.splice(connections.indexOf(socket), 1);
+      console.log('Disconnected: %s sockets connected', connections.length);
+  });
+});
+
 
 module.exports = app;

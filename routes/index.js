@@ -7,6 +7,10 @@ const T = Twit(config);
 let friendIds = [];
 let dateData = [];
 let tweetsText = [];
+let favCount = [];
+let RTCount = [];
+let timeOfTweet = [];
+let connections =[];
 
 //User's Twitter handle for use as parameter in GET requests
 const screenName = {screen_name: 'shootaaa'};
@@ -27,256 +31,278 @@ var templateData = { title: 'Twitter Interface', username: '@Shootaaa' };
 
 //START COMMENT BLOCK FOR FRIENDS (USING IDS)
 
-// function doTwitterStuff(cb) {
-  //Get list of 5 user id's that follow screenName (for use in other functions)
-  T.get('friends/ids', screenName, (err, data) => {
-    friendIds = [];
-    for(let i = 0; i < 5; i++){
-      // //if !err push
-      friendIds.push(`{user_id: ${data.ids[i]}}`);
 
-      //MIGHT ONLY NEED THE ID NUMBER NOT USER_ID: ID_NUMBER
+//Get list of 5 user id's that follow screenName (for use in other functions)
+T.get('friends/ids', screenName, (err, data) => {
+  friendIds = [];
+  for(let i = 0; i < 5; i++){
+    // //if !err push
+    friendIds.push(`{user_id: ${data.ids[i]}}`);
 
-      //List of 5 most recent follower's (friend's) IDs
+    //MIGHT ONLY NEED THE ID NUMBER NOT USER_ID: ID_NUMBER
 
-      // friendIds.push((objectMaker(data.ids[i])));
+    //List of 5 most recent follower's (friend's) IDs
 
-      // //Prints {user_id: 885258144443543600} etc. to console
+    // friendIds.push((objectMaker(data.ids[i])));
 
-    }
+    // //Prints {user_id: 885258144443543600} etc. to console
 
-    // // // Logs comma separated list of user_ids
-    // console.log(friendIds.join(','));
-    console.log(friendIds);
-    templateData.friendIds = friendIds;
+  }
 
-  });
+  // // // Logs comma separated list of user_ids
+  // console.log(friendIds.join(','));
+  console.log(friendIds);
+  templateData.friendIds = friendIds;
 
-  // Get your 5 most recent tweets
-  T.get('statuses/user_timeline', screenName, (err, data) => {
+});
 
-    if(err){
-      console.log(err);
-    }
+//MODULARIZE INTO A FUNCTION
 
-    for(let k = 0; k < 5; k++){
+// Get your 5 most recent tweets
+T.get('statuses/user_timeline', screenName, (err, data) => {
 
-      console.log(`Tweet ${k+1}:`);
-      console.log(data[k].text);
-      tweetsText.push(data[k].text);
+  if(err){
+    console.log(err);
+  }
 
-    }
-    templateData.tweetsText = tweetsText;
-  });
+  for(let k = 0; k < 5; k++){
 
-  // Get your 5 most recent friends (followers)
-    //This method is especially powerful when used in conjunction with GET users / lookup, a method that allows you to convert user IDs into full user objects in bulk.
-  T.get('followers/ids', screenName, (err,data) => {
+    // console.log(`Tweet ${k+1}:`);
+    // console.log(data[k].text);
+    console.log('33333333');
+    // console.log(data[k]);
+    RTCount.push(data[k].retweet_count);
+    favCount.push(data[k].favorite_count)
+    tweetsText.push(data[k].text);
+    console.log(data[k].created_at);
+    timeOfTweet.push(data[k].created_at); //Edit format with MOMENT
+  }
+  templateData.RTCount = RTCount;
+  templateData.favCount = favCount;
+  templateData.tweetsText = tweetsText;
+  templateData.timeOfTweet = timeOfTweet;
+});
 
-    //Friends count
-    console.log(data.ids.length);
-    templateData.followers = data.ids.length;
+// Get your 5 most recent friends (followers)
+  //This method is especially powerful when used in conjunction with GET users / lookup, a method that allows you to convert user IDs into full user objects in bulk.
+T.get('followers/ids', screenName, (err,data) => {
 
-
-  });
-
-
-  //CALL TWEETS FUNCTION HERE TO MAKE USE OF ID -- ISSUE HERE
-  T.get('friends/list', screenName, (err,data) => {
-
-      //real name 1
-      console.log(data.users[0].name);
-      templateData.followerOneName = data.users[0].name;
-
-      //screen name 1
-      console.log(data.users[0].screen_name);
-      templateData.followerOneScreenName = data.users[0].screen_name;
-
-      //profile image 1
-      console.log(data.users[0].profile_image_url);
-      templateData.followerOneProfileURL = data.users[0].profile_image_url.replace('normal', 'bigger');
-
-      //real name 2
-      console.log(data.users[1].name);
-      templateData.followerTwoName = data.users[1].name;
-
-      //screen name 2
-      console.log(data.users[1].screen_name);
-      templateData.followerTwoScreenName = data.users[1].screen_name;
-
-      //profile image 2
-      console.log(data.users[1].profile_image_url);
-      templateData.followerTwoProfileURL = data.users[1].profile_image_url.replace('normal', 'bigger');
+  //Friends count
+  console.log(data.ids.length);
+  templateData.followers = data.ids.length;
 
 
-      //real name 3
-      console.log(data.users[2].name);
-      templateData.followerThreeName = data.users[2].name;
-
-      //screen name 3
-      console.log(data.users[2].screen_name);
-      templateData.followerThreeScreenName = data.users[2].screen_name;
-
-      //profile image 3
-      console.log(data.users[2].profile_image_url);
-      templateData.followerThreeProfileURL = data.users[2].profile_image_url.replace('normal', 'bigger');
+});
 
 
-      //real name 4
-      console.log(data.users[3].name);
-      templateData.followerFourName = data.users[3].name;
+//CALL TWEETS FUNCTION HERE TO MAKE USE OF ID -- ISSUE HERE
+T.get('friends/list', screenName, (err,data) => {
 
-      //screen name 4
-      console.log(data.users[3].screen_name);
-      templateData.followerFourScreenName = data.users[3].screen_name;
+    //real name 1
+    console.log(data.users[0].name);
+    templateData.followerOneName = data.users[0].name;
 
-      //profile image 4
-      console.log(data.users[3].profile_image_url);
-      templateData.followerFourProfileURL = data.users[3].profile_image_url.replace('normal', 'bigger');
+    //screen name 1
+    console.log(data.users[0].screen_name);
+    templateData.followerOneScreenName = data.users[0].screen_name;
 
+    //profile image 1
+    console.log(data.users[0].profile_image_url);
+    templateData.followerOneProfileURL = data.users[0].profile_image_url.replace('normal', 'bigger');
 
-      //real name 5
-      console.log(data.users[4].name);
-      templateData.followerFiveName = data.users[4].name;
+    //real name 2
+    console.log(data.users[1].name);
+    templateData.followerTwoName = data.users[1].name;
 
-      //screen name 5
-      console.log(data.users[4].screen_name);
-      templateData.followerFiveScreenName = data.users[4].screen_name;
+    //screen name 2
+    console.log(data.users[1].screen_name);
+    templateData.followerTwoScreenName = data.users[1].screen_name;
 
-      //profile image 5
-      console.log(data.users[4].profile_image_url);
-      templateData.followerFiveProfileURL = data.users[4].profile_image_url.replace('normal', 'bigger');
-  });
-
-
-  // Get your 5 most recent private messages
+    //profile image 2
+    console.log(data.users[1].profile_image_url);
+    templateData.followerTwoProfileURL = data.users[1].profile_image_url.replace('normal', 'bigger');
 
 
-  T.get('users/lookup', screenName, (err, data) => {
+    //real name 3
+    console.log(data.users[2].name);
+    templateData.followerThreeName = data.users[2].name;
 
-    // -# of retweets:     "retweet_count": 23936,
-    console.log(data[0].status.retweet_count);
-    templateData.retweetCount = data[0].status.retweet_count;
+    //screen name 3
+    console.log(data.users[2].screen_name);
+    templateData.followerThreeScreenName = data.users[2].screen_name;
 
-    // -# of favorites (aka 'likes'):    "favorite_count": 21879,
-    console.log(data[0].status.favorite_count);
-    templateData.favoriteCount = data[0].status.favorite_count;
-
-    // -date Tweeted
-    console.log(data[0].status.created_at);
-    templateData.createdAt = data[0].status.created_at;
+    //profile image 3
+    console.log(data.users[2].profile_image_url);
+    templateData.followerThreeProfileURL = data.users[2].profile_image_url.replace('normal', 'bigger');
 
 
+    //real name 4
+    console.log(data.users[3].name);
+    templateData.followerFourName = data.users[3].name;
 
-    // MANIPULATE DATES TO GIVE TIME OF TWEETS
+    //screen name 4
+    console.log(data.users[3].screen_name);
+    templateData.followerFourScreenName = data.users[3].screen_name;
 
-
-
-    //-profile image
-    console.log(data[0].profile_image_url.replace('normal','bigger'));
-    templateData.profileImageURL = data[0].profile_image_url.replace('normal','bigger');
-
-    console.log(data[0].profile_background_banner_url + "*********");
-    templateData.profileBackgroundImageURL = data[0].profile_banner_url;
-
-    //-real name
-    console.log(data[0].name);
-    templateData.name = data[0].name;
-
-    //-screenname
-    console.log(data[0].screen_name);
-    templateData.screenName = data[0].screen_name;
-
-    //unnecessary?
-    console.log(data[0].id_str);
-    templateData.idString = data[0].id_str;
-
-    //FriendsCount
-    console.log(data[0].friends_count);
-    templateData.friendsCount = data[0].friends_count;
-
-    //Handle 404 err if no look up criteria match
-    //Data comes in as incomingMessage and should have property of statusCode
-    if(err){
-      console.log(err);
-    }
-  })
+    //profile image 4
+    console.log(data.users[3].profile_image_url);
+    templateData.followerFourProfileURL = data.users[3].profile_image_url.replace('normal', 'bigger');
 
 
-  //START COMMENT BLOCK FOR MESSAGES
+    //real name 5
+    console.log(data.users[4].name);
+    templateData.followerFiveName = data.users[4].name;
 
-  //Get 5 most recent direct message bodies, date the message was sent, and time the message was sent
-  T.get('direct_messages/sent', {count: 5}, (err, data, res) => {
+    //screen name 5
+    console.log(data.users[4].screen_name);
+    templateData.followerFiveScreenName = data.users[4].screen_name;
 
-    dateData = [];
+    //profile image 5
+    console.log(data.users[4].profile_image_url);
+    templateData.followerFiveProfileURL = data.users[4].profile_image_url.replace('normal', 'bigger');
+});
 
-    for (let j = 0; j < 5; j++){
 
-      //Message body
-      // console.log(data[j].text);
-      dateData.push(data[j].text);
+// Get your 5 most recent private messages
 
-      //Dates are always in "Mon Jun 26 23:54:35 +0000 2017" string format
-      // console.log(data[j].created_at);
 
-      // //Date message was sent
-      // // console.log(dateData.split(' ', 3).join(' '));
-      // dateData.push(dateData.split(' ', 3).join(' '));
-      //
-      // //Time the message was sent
-      // // console.log(dateData.split(' ').slice(3).join(' '));
-      // dateData.push(dateData.split(' ').slice(3).join(' '));
-    }
-    // //Add array of data to templateData object
-    templateData.messagesText = dateData;
-    // console.log(dateData[1]);
-  });
-// }
+T.get('users/lookup', screenName, (err, data) => {
+
+  // -# of retweets:     "retweet_count": 23936,
+  console.log(data[0].status.retweet_count);
+  templateData.retweetCount = data[0].status.retweet_count;
+
+  // -# of favorites (aka 'likes'):    "favorite_count": 21879,
+  console.log(data[0].status.favorite_count);
+  templateData.favoriteCount = data[0].status.favorite_count;
+
+  // -date Tweeted
+  console.log(data[0].status.created_at);
+  templateData.createdAt = data[0].status.created_at;
+
+  // MANIPULATE DATES TO GIVE TIME OF TWEETS
+
+
+
+  //-profile image
+  console.log(data[0].profile_image_url.replace('normal','bigger'));
+  templateData.profileImageURL = data[0].profile_image_url.replace('normal','bigger');
+
+  //IS THIS VALID OR NECESSARY? - IT LOGS OUT AS UNDEFINED
+  console.log(data[0].profile_background_banner_url + "*********");
+  templateData.profileBackgroundImageURL = data[0].profile_banner_url;
+
+  //-real name
+  console.log(data[0].name);
+  templateData.name = data[0].name;
+
+  //-screenname
+  console.log(data[0].screen_name);
+  templateData.screenName = data[0].screen_name;
+
+  //unnecessary?
+  console.log(data[0].id_str);
+  templateData.idString = data[0].id_str;
+
+  //FriendsCount
+  console.log(data[0].friends_count);
+  templateData.friendsCount = data[0].friends_count;
+
+  //Handle 404 err if no look up criteria match
+  //Data comes in as incomingMessage and should have property of statusCode
+  if(err){
+    console.log(err);
+  }
+})
+
+
+//START COMMENT BLOCK FOR MESSAGES
+
+//Get 5 most recent direct message bodies, date the message was sent, and time the message was sent
+T.get('direct_messages/sent', {count: 5}, (err, data, res) => {
+
+  dateData = [];
+
+  for (let j = 0; j < 5; j++){
+
+    //Message body
+    // console.log(data[j].text);
+    dateData.push(data[j].text);
+
+
+    //***** PERFORM CALCULATIONS HERE TO GET TIME SINCE CORRESPONDING EVENT OCCURED ******
+
+
+
+    //Dates are always in "Mon Jun 26 23:54:35 +0000 2017" string format
+    // console.log(data[j].created_at);
+
+    // //Date message was sent
+    // // console.log(dateData.split(' ', 3).join(' '));
+    // dateData.push(dateData.split(' ', 3).join(' '));
+    //
+    // //Time the message was sent
+    // // console.log(dateData.split(' ').slice(3).join(' '));
+    // dateData.push(dateData.split(' ').slice(3).join(' '));
+  }
+  // //Add array of data to templateData object
+  templateData.messagesText = dateData;
+});
 //END COMMENT BLOCK FOR MESSAGES
 
-//
-// //Tweet 'hello world!'
-// T.post('statuses/update', { status: 'hello world!' }, (err, data, res) => {
-//   console.log(data)
-//   res.redirect('/');
-// });
-//
-//
-// //Stream a sample of public statuses
-// var stream = T.stream('statuses/sample')
-//
-// stream.on('tweet', function (tweet) {
-//   console.log(tweet)
-// });
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-
-  // doTwitterStuff();
   res.render('index', templateData);
 });
 
+//HOOK UP SOCKET.IO PROPERLY
 router.post('/', (req, res, next) => {
   //Form response will go to req.body and that's why we need bodyParser to populate the property
     //because req.body is undefined by default
   //To put the form response into the req.body, we need middleware
-
   console.log(req.body.tweetText);
 
   const tweetToSend = { status : req.body.tweetText };
 
-  //Tweet 'hello world!'
+  //Tweet 'req.body.tweetText'
   T.post('statuses/update', tweetToSend, (err, data, res) => {
     // console.log(data)
     // res.redirect('/');
-    console.log(tweetToSend);
+    console.log(tweetToSend.status);
+    //Get new tweet information
+    // Get your 5 most recent tweets
+
   });
 
-  res.render('index', templateData);
-});
+  // T.get('statuses/user_timeline', screenName, (err, data) => {
+  //   //Reset tweetsText array to accept new tweets
+  //   // tweetsText = [];
+  //
+  //   if(err){
+  //     console.log(err);
+  //   }
+  //
+  //   // for(let k = 0; k < 5; k++){
+  //     // CONTINUE HERE
+  //     tweetsText.pop(data[4].text);
+  //     tweetsText.unshift(data[0].text);
+  //
+  //     console.log(`NEW TWEET: ${data[0].text}`);
+  //
+  //     console.log(tweetsText);
+  //
+  //   // }
+  //   templateData.tweetsText = tweetsText;
+  // });
 
+  //Perhaps 'send' or 'end' the data to home route, instead of rendering it once more
+  res.end();
+});
 
 //ERROR HANDLING REDIRECTS
 //res.redirect(301, 'http://example.com');
+
+// http://expressjs.com/en/api.html#res.status
 
 module.exports = router;
