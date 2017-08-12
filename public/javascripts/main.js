@@ -3,17 +3,23 @@
 // console.log($('tweet-textarea'));
 
 // 'use strict';
+$(function(){
+  const maxChar = 140;
+  var socket = io.connect;
+
+  console.log( $('#tweet-textarea').text().length );
 
 
+
+  console.log( $('#tweet-char').text() );
+
+  countTweet();
+});
 
 //main.js is hooked up in layout.pug so it's in each header of the app
-const maxChar = 140;
-
-console.log( $('#tweet-textarea').text().length );
 
 
 
-console.log( $('#tweet-char').text() );
 // $('select#title').change(function validateJobRoleValue(e){
 //
 //   checkJobRoleValue();
