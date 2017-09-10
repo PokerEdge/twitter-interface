@@ -10,7 +10,7 @@ let tweetsText = [];
 let favCount = [];
 let RTCount = [];
 let timeOfTweet = [];
-let connections =[];
+// let connections =[];
 
 //User's Twitter handle for use as parameter in GET requests
 const screenName = {screen_name: 'shootaaa'};
@@ -90,7 +90,6 @@ T.get('followers/ids', screenName, (err,data) => {
   //Friends count
   console.log(data.ids.length);
   templateData.followers = data.ids.length;
-
 
 });
 

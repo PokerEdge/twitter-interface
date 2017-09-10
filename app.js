@@ -18,8 +18,6 @@ const io = require('socket.io').listen(server);
 // const cheerio = require('cheerio');
 // const $ = cheerio.load(`<textarea class="circle--textarea--input" placeholder="What's happening?" id="tweet-textarea"></textarea>`);
 
-let connections = [];
-
 // var app = require('express')();
 // var server = require('http').createServer(app);
 // var io = require('socket.io')(server);
@@ -32,16 +30,7 @@ let connections = [];
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-
 var config = require('./config');
-
-
-
-
-//CHANGE REQUESTS FROM APP.X to SERVER.X ?
-
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -58,10 +47,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 
-//Load statis assets from public app.use(express.static('public'))
-app.use('/static', (req, res) => {
-
-});
+// //Load static assets from public app.use(express.static('public'))
+// app.use('/static', (req, res) => {
+//
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -82,18 +71,21 @@ app.use(function(err, req, res, next) {
 });
 
 //Changed from app.listen(3000, ...) to support socket.io
-server.listen(process.env.PORT || 3000, () => console.log('Frontend server is running on port 3000'));
+server.listen(process.env.PORT || 7777, () => console.log('Frontend server is running on port 7777'));
 
-io.sockets.on('connection', function(socket){
+io.on('tweet', function(){
   //All events emitted go in here (entire post request...?)
+    // Emit the tweet data from the post request to the client side
 
-  connections.push(socket);
-  console.log('Connected: %s sockets connected', connections.length);
+    //MAKE SURE (ON CLIENT SIDE) THAT THE NEWLY ACQUIRED TWEET IS APPENDED TO THE LIST OF TWEETS
+      // Check requirements. Show 5 tweets total? Or start by showing 5 tweets?
+        //That will determine if more needs to be done after appending the new tweet info to ul of li
 
-  socket.on('disconnect', function(){
-      connections.splice(connections.indexOf(socket), 1);
-      console.log('Disconnected: %s sockets connected', connections.length);
-  });
+
+
+  // On (tweet) post request
+
+  // });
 });
 
 
