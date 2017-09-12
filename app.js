@@ -62,6 +62,7 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
+  //Can stylize the error.pug view more to make it user friendly
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
@@ -73,19 +74,20 @@ app.use(function(err, req, res, next) {
 //Changed from app.listen(3000, ...) to support socket.io
 server.listen(process.env.PORT || 7777, () => console.log('Frontend server is running on port 7777'));
 
-io.on('tweet', function(){
-  //All events emitted go in here (entire post request...?)
-    // Emit the tweet data from the post request to the client side
+//Receive data on the server.io
+  //When client connects, the create a connection event with the socket that the
+  //user is using to connect. Kind of like jQuery document ready code for socket.io
+//Use named socket event from client side to receive data on the client side
+io.sockets.on('connection', function(socket){
 
-    //MAKE SURE (ON CLIENT SIDE) THAT THE NEWLY ACQUIRED TWEET IS APPENDED TO THE LIST OF TWEETS
-      // Check requirements. Show 5 tweets total? Or start by showing 5 tweets?
-        //That will determine if more needs to be done after appending the new tweet info to ul of li
+  //Handler for the data pertaining to socket event on client side for server
+  socket.on('tweet', function(data){
+    //What do we do with the data? Give it a name of 'new message' and pass it what
+    //we want it to send out
+    io.sockets.emit('new tweet', data);
 
-
-
-  // On (tweet) post request
-
-  // });
+    //Now we have to receive the message on the client side...
+  });
 });
 
 

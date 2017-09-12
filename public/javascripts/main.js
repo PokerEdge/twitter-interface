@@ -8,19 +8,21 @@
 const socket = io.connect();
 let tweetLength;
 
-//Get variables we need wiht jQuery
+//Get variables we need with jQuery
+
+
 // const $tweetSendForm = $('tweet-textarea');
 
-socket.on('tweet', function(tweet){
-  e.preventDefault();
-  console.log(tweet);
-  socket.emit('My other event', { my: 'data'});
-
-  $('.button-primary').click(function(e){
-    e.preventDefault();
-    socket.emit('message', 'Here is the payload from client.');
-  });
-});
+// socket.on('tweet', function(tweet){
+//   e.preventDefault();
+//   console.log(tweet);
+//   socket.emit('My other event', { my: 'data'});
+//
+//   $('.button-primary').click(function(e){
+//     e.preventDefault();
+//     socket.emit('message', 'Here is the payload from client.');
+//   });
+// });
 
 //
 
@@ -39,10 +41,9 @@ socket.on('tweet', function(tweet){
 
 //Bind keyup event handler to tweet-textarea
 $('#tweet-textarea').keyup(function(e){
-  e.preventDefault();
 
-  //Get tweet length
-  console.log( $('#tweet-textarea').val().length );
+  //Prevent page from reloading (and display error message (w animation))
+  e.preventDefault();
 
   //Set length on keyup from $('#tweet-textarea').text().length
   tweetLength = $('#tweet-textarea').val().length;
@@ -62,28 +63,37 @@ $('#tweet-textarea').keyup(function(e){
 
 //INSIDE SOCKET CONNECTION 'LISTENER' FOR TWEET
 $('.button-primary').click(function(e){
-  // e.preventDefault();
-  console.log('Tweet button was just clicked now');
+  e.preventDefault();
 
-  //Get tweet text
+  //Log tweet text
   console.log( $('#tweet-textarea').val() );
 
   //Prevent tweet from sending if tweet length is too long
   if (tweetLength > 140){
 
-    //Prevent page from reloading (and display error message (w animation))
-    e.preventDefault();
     console.log("Error: Tweet is too long!")
 
 
   } else {
 
-    e.preventDefault();
+    //Sends event data to server
+      //Name the event whatever you want with the first argument
+      //Write what you're sending with the second argument
+        //You can send an object populated with key-value pairs, if you want
+    socket.emit('tweet', $('#tweet-textarea').val());
+    $('#tweet-textarea').val('');
 
-    //Send tweet Out
 
 
     //(Get and) Append new tweet to application with appropriate styles and time
+      //Create new tweet templateData array element
+    socket.on('new tweet', function(data){
+      //test if tweet is being passed
+      $('.app--section--heading').append(data);
+    });
+
+    // //Time is moment with no parameter
+    // let tweetTime = moment();
 
 
     //Resets for after valid submission

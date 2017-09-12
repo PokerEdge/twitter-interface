@@ -67,15 +67,13 @@ T.get('statuses/user_timeline', screenName, (err, data) => {
 
   for(let k = 0; k < 5; k++){
 
-    // console.log(`Tweet ${k+1}:`);
-    // console.log(data[k].text);
-    console.log('33333333');
-    // console.log(data[k]);
     RTCount.push(data[k].retweet_count);
     favCount.push(data[k].favorite_count)
     tweetsText.push(data[k].text);
+
+    //Edit format with MOMENT by creating a new moment and finding hours-since
     console.log(data[k].created_at);
-    timeOfTweet.push(data[k].created_at); //Edit format with MOMENT
+    timeOfTweet.push(data[k].created_at);
   }
   templateData.RTCount = RTCount;
   templateData.favCount = favCount;
@@ -88,7 +86,7 @@ T.get('statuses/user_timeline', screenName, (err, data) => {
 T.get('followers/ids', screenName, (err,data) => {
 
   //Friends count
-  console.log(data.ids.length);
+  // console.log(data.ids.length);
   templateData.followers = data.ids.length;
 
 });
