@@ -1,11 +1,14 @@
 const express = require('express');
 const Twit = require('twit');
 const config = require('../config');
+const moment = require('moment');
+
 const router = express.Router();
 
 const T = Twit(config);
 let friendIds = [];
 let dateData = [];
+let msgTime = [];
 let tweetsText = [];
 let favCount = [];
 let RTCount = [];
@@ -27,10 +30,14 @@ var templateData = { title: 'Twitter Interface', username: '@Shootaaa' };
 // 5 Tweets: message content, number of retweets, number of likes, and date tweeted
   // https://dev.twitter.com/overview/api/tweets
 
+// //Find present time and subtract that parsed time from hours since tweet was made
+// function timeSinceTweet(displayTime){
+//   let now = moment();
+//   T.get()
+// }
 
 
 //START COMMENT BLOCK FOR FRIENDS (USING IDS)
-
 
 //Get list of 5 user id's that follow screenName (for use in other functions)
 T.get('friends/ids', screenName, (err, data) => {
@@ -73,6 +80,7 @@ T.get('statuses/user_timeline', screenName, (err, data) => {
 
     //Edit format with MOMENT by creating a new moment and finding hours-since
     console.log(data[k].created_at);
+    data[k].created_at = moment(data[k].created_at).fromNow();
     timeOfTweet.push(data[k].created_at);
   }
   templateData.RTCount = RTCount;
@@ -177,7 +185,7 @@ T.get('users/lookup', screenName, (err, data) => {
   console.log(data[0].status.created_at);
   templateData.createdAt = data[0].status.created_at;
 
-  // MANIPULATE DATES TO GIVE TIME OF TWEETS
+  // MANIPULATE DATES TO GIVE TIME SINCE TWEET USING MOMENT PACKAGE
 
 
 
@@ -219,12 +227,17 @@ T.get('users/lookup', screenName, (err, data) => {
 T.get('direct_messages/sent', {count: 5}, (err, data, res) => {
 
   dateData = [];
+  msgTime = [];
 
   for (let j = 0; j < 5; j++){
 
     //Message body
     // console.log(data[j].text);
     dateData.push(data[j].text);
+    data[j].created_at = moment(data[j].created_at).fromNow();
+    msgTime.push(data[j].created_at);
+
+    //Message time
 
 
     //***** PERFORM CALCULATIONS HERE TO GET TIME SINCE CORRESPONDING EVENT OCCURED ******
@@ -244,6 +257,7 @@ T.get('direct_messages/sent', {count: 5}, (err, data, res) => {
   }
   // //Add array of data to templateData object
   templateData.messagesText = dateData;
+  templateData.messagesTime = msgTime;
 });
 //END COMMENT BLOCK FOR MESSAGES
 
@@ -264,9 +278,14 @@ router.post('/', (req, res, next) => {
 
   //Tweet 'req.body.tweetText'
   T.post('statuses/update', tweetToSend, (err, data, res) => {
-    // console.log(data)
-    // res.redirect('/');
+
+
+    // THIS IS GRABBING THE TWEET TEXT
     console.log(tweetToSend.status);
+
+    //Reset status for next tweet
+    tweetToSend.status = "";
+
     //Get new tweet information
     // Get your 5 most recent tweets
 

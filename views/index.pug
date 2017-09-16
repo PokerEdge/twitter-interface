@@ -44,7 +44,7 @@ block content
       .app--section
         ul.app--tweet--list
           li
-            strong.app--tweet--timestamp 4h
+            strong.app--tweet--timestamp #{timeOfTweet[0]}
             a.app--tweet--author
               .app--avatar(style=`background-image: url(${profileImageURL})`)
                 img(src='images/f-spore.png')
@@ -78,7 +78,7 @@ block content
                     C35,4.1,30.9,0,25.8,0L25.8,0z')
                   strong #{favCount[0]}
           li
-            strong.app--tweet--timestamp 4h
+            strong.app--tweet--timestamp #{timeOfTweet[1]}
             a.app--tweet--author
               .app--avatar(style=`background-image: url(${profileImageURL})`)
                 img(src='images/f-spore.png')
@@ -112,7 +112,7 @@ block content
                     C35,4.1,30.9,0,25.8,0L25.8,0z')
                   strong #{favCount[1]}
           li
-            strong.app--tweet--timestamp 4h
+            strong.app--tweet--timestamp #{timeOfTweet[2]}
             a.app--tweet--author
               .app--avatar(style=`background-image: url(${profileImageURL})`)
                 img(src='images/f-spore.png')
@@ -146,7 +146,7 @@ block content
                     C35,4.1,30.9,0,25.8,0L25.8,0z')
                   strong #{favCount[2]}
           li
-            strong.app--tweet--timestamp 4h
+            strong.app--tweet--timestamp #{timeOfTweet[3]}
             a.app--tweet--author
               .app--avatar(style=`background-image: url(${profileImageURL})`)
                 img(src='images/f-spore.png')
@@ -180,7 +180,7 @@ block content
                     C35,4.1,30.9,0,25.8,0L25.8,0z')
                   strong #{favCount[3]}
           li
-            strong.app--tweet--timestamp 4h
+            strong.app--tweet--timestamp #{timeOfTweet[4]}
             a.app--tweet--author
               .app--avatar(style=`background-image: url(${profileImageURL})`)
                 img(src='images/f-spore.png')
@@ -278,36 +278,39 @@ block content
                 .app--avatar(style=`background-image: url(${profileImageURL})`)
                   img(src='images/f-spore.png')
                 p.app--message--text #{messagesText[0]}
-                p.app--message--timestamp 3 hours ago
+                p.app--message--timestamp #{messagesTime[0]}
               li.app--message--me
                 .app--avatar(style=`background-image: url(${profileImageURL})`)
                   img(src='images/m-spore.png')
                 p.app--message--text #{messagesText[1]}
-                p.app--message--timestamp 2 hours ago
+                p.app--message--timestamp #{messagesTime[1]}
               li.app--message--me
                 .app--avatar(style=`background-image: url(${profileImageURL})`)
                   img(src='images/f-spore.png')
                 p.app--message--text #{messagesText[2]}
-                p.app--message--timestamp 2 hours ago
+                p.app--message--timestamp #{messagesTime[2]}
               li.app--message--me
                 .app--avatar(style=`background-image: url(${profileImageURL})`)
                   img(src='images/m-spore.png')
                 p.app--message--text #{messagesText[3]}
-                p.app--message--timestamp 1 hour ago
+                p.app--message--timestamp #{messagesTime[3]}
               li.app--message--me
                 .app--avatar(style=`background-image: url(${profileImageURL})`)
                   img(src='images/f-spore.png')
                 p.app--message--text #{messagesText[4]}
-                p.app--message--timestamp 1 hour ago
-  //
-      jQuery
-      ––––––––––––––––––––––––––––––––––––––––––––––––––
-  script(src='http://code.jquery.com/jquery-3.2.1.js', integrity='sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=', crossorigin='anonymous')
+                p.app--message--timestamp #{messagesTime[4]}
   //
       socket.js
       ––––––––––––––––––––––––––––––––––––––––––––––––––
   script(src='/socket.io/socket.io.js') 
   //
+      jQuery
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+  script(src='http://code.jquery.com/jquery-3.2.1.js', integrity='sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=', crossorigin='anonymous')
+  //
       main.js
       ––––––––––––––––––––––––––––––––––––––––––––––––––
   script(src='/javascripts/main.js') 
+  //- for each (tweet in templateData) {
+  //-   Do things
+  //- }

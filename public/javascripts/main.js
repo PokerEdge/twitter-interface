@@ -9,9 +9,14 @@ const socket = io.connect();
 let tweetLength;
 
 //Get variables we need with jQuery
+const $tweetTextArea = $('#tweet-textarea');
+const $tweetButton = $('.button-primary');
+const $tweetLengthDisplay = $('#tweet-char');
+const $tweetStyle = $('.app--tweet--char');
 
+//test element for appending data
+const $testElement = $('.app--section--heading');
 
-// const $tweetSendForm = $('tweet-textarea');
 
 // socket.on('tweet', function(tweet){
 //   e.preventDefault();
@@ -40,33 +45,33 @@ let tweetLength;
 //Code socket.on('tweet', function(templateData ??? ){})
 
 //Bind keyup event handler to tweet-textarea
-$('#tweet-textarea').keyup(function(e){
+$tweetTextArea.keyup(function(e){
 
   //Prevent page from reloading (and display error message (w animation))
   e.preventDefault();
 
   //Set length on keyup from $('#tweet-textarea').text().length
-  tweetLength = $('#tweet-textarea').val().length;
+  tweetLength = $tweetTextArea.val().length;
 
   //Replace tweet length with 140 minus number of characters in tweet-textarea
-  $('#tweet-char').text(140 - tweetLength);
+  $tweetLengthDisplay.text(140 - tweetLength);
 
   //Color app--tweet--char depending on validity of tweet length
   if (tweetLength > 140){
-    $('.app--tweet--char').css("color","#d40d12");
+    $tweetStyle.css("color","#d40d12");
   } else {
-    $('.app--tweet--char').css("color","#ccc");
+    $tweetStyle.css("color","#ccc");
   }
 
 });
 
 
 //INSIDE SOCKET CONNECTION 'LISTENER' FOR TWEET
-$('.button-primary').click(function(e){
+$tweetButton.click(function(e){
   e.preventDefault();
 
   //Log tweet text
-  console.log( $('#tweet-textarea').val() );
+  console.log( $tweetTextArea.val() );
 
   //Prevent tweet from sending if tweet length is too long
   if (tweetLength > 140){
@@ -80,8 +85,9 @@ $('.button-primary').click(function(e){
       //Name the event whatever you want with the first argument
       //Write what you're sending with the second argument
         //You can send an object populated with key-value pairs, if you want
-    socket.emit('tweet', $('#tweet-textarea').val());
-    $('#tweet-textarea').val('');
+    socket.emit('tweet', $tweetTextArea.val());
+
+    $tweetTextArea.val('');
 
 
 
@@ -89,16 +95,23 @@ $('.button-primary').click(function(e){
       //Create new tweet templateData array element
     socket.on('new tweet', function(data){
       //test if tweet is being passed
-      $('.app--section--heading').append(data);
+        //construct tweet aka "data" in backend from templateData
+
+      //Append tweet data into front end
+      $testElement.append(data + "<br/>");
+
+      //Resets for after valid submission
+      $tweetTextArea.val('');
+      $tweetLengthDisplay.text(140);
     });
 
     // //Time is moment with no parameter
     // let tweetTime = moment();
 
 
-    //Resets for after valid submission
-    $('#tweet-textarea').val('');
-    $('#tweet-char').text(140);
+    // //Resets for after valid submission
+    // $('#tweet-textarea').val('');
+    // $('#tweet-char').text(140);
 
   }
 });
